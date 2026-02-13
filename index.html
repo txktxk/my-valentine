@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>For My Forever</title>
+<style>
+:root {
+    --primary-red: #ff0a54;
+    --deep-maroon: #2b0b0e;
+    --glass: rgba(255, 255, 255, 0.12);
+}
+
+body, html {
+    margin: 0; padding: 0;
+    font-family: 'optima', 'Segoe UI', serif;
+    overflow: hidden;
+    background: #000;
+}
+
+/* --- PROPOSAL PAGE --- */
+#proposal-page {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    background: linear-gradient(180deg, #ffccd5 0%, #fff0f3 100%);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s;
+    position: relative;
+    z-index: 2000;
+}
+
+h1 { color: var(--primary-red); font-size: 2.2rem; margin-bottom: 50px; padding: 0 20px; }
+
+.yes-btn {
+    background: var(--primary-red); color: white;
+    padding: 20px 80px; border: none; border-radius: 50px;
+    font-size: 1.6rem; font-weight: bold;
+    box-shadow: 0 0 20px rgba(255, 10, 84, 0.4);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.no-btn {
+    background: white; color: #888;
+    padding: 12px 35px; border: 1px solid #ddd;
+    border-radius: 50px; font-size: 1rem; margin-top: 30px;
+    transition: all 0.2s ease;
+}
+
+/* --- ALBUM PAGE --- */
+#album-page {
+    display: none; height: 100vh; width: 100vw;
+    background: radial-gradient(circle at center, #4a0404 0%, #000000 100%);
+    position: relative;
+}
+
+#counter {
+    position: absolute; top: 40px; width: 100%;
+    text-align: center; color: #ff85a1; 
+    letter-spacing: 3px; font-size: 0.9rem; z-index: 3000;
+}
+
+.slide {
+    position: absolute; width: 100%; height: 100%;
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center; z-index: 2500;
+}
+
+/* --- GLASS CARD --- */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    padding: 15px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    width: 85%; max-height: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.slide img { 
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 60vh; 
+    border-radius: 12px;
+    object-fit: contain;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.caption { 
+    color: white; margin-top: 10px; font-size: 1.1rem; text-align: center; font-style: italic;
+}
+
+/* Scrollable captions (long messages) */
+.caption.scrollable {
+    overflow-y: auto;
+    max-height: 120px;
+    transition: max-height 0.3s ease;
+}
+
+.caption.scrollable.expanded {
+    max-height: 300px;
+}
+
+.read-more-btn {
+    margin-top: 5px; 
+    background: rgba(255,255,255,0.2);
+    border: none; border-radius: 8px; padding: 5px 12px;
+    color: white; cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* NAV BUTTONS */
+.nav-btn {
+    position: fixed; bottom: 40px;
+    background: rgba(255,255,255,0.1);
+    color: white; border: 1px solid rgba(255,255,255,0.3);
+    width: 60px; height: 60px; border-radius: 50%;
+    font-size: 1.5rem; z-index: 3000;
+}
+#nextBtn { right: 30px; background: var(--primary-red); border: none; }
+#prevBtn { left: 30px; }
+
+/* THE RAIN */
+.falling {
+    position: fixed; top: -50px; z-index: 1000;
+    pointer-events: none; animation: fall 4.5s linear forwards;
+}
+@keyframes fall { 
+    0% { transform: translateY(-5vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } 
+}
+
+.zoom-reveal { animation: zoomIn 0.8s ease-out; }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<audio id="music-no" src="assets/audios/no.mp3"></audio>
+<audio id="music-yes" src="assets/audios/1.mp3"></audio>
+<audio id="music-pic1" src="assets/audios/2.mp3" class="pic-audio"></audio>
+<audio id="music-pic2" src="assets/audios/3.mp3" class="pic-audio"></audio>
+<audio id="music-pic3" src="assets/audios/4.mp3" class="pic-audio"></audio>
+<audio id="music-pic4" src="assets/audios/5.mp3" class="pic-audio"></audio>
+<audio id="music-pic5" src="assets/audios/6.mp3" class="pic-audio"></audio>
+<audio id="music-pic6" src="assets/audios/1.mp3" class="pic-audio"></audio>
+
+<div id="proposal-page">
+    <h1>Ende Muthmaniyeee nee ee valentine's day kk ende koode ende valentine aayi indaville ? 💍</h1>
+    <div class="btn-container">
+        <button class="yes-btn" onclick="celebrate()">YES</button>
+        <br>
+        <button class="no-btn" id="noBtn">No</button>
+    </div>
+</div>
+
+<div id="album-page">
+    <div id="counter">MOMENT 1 / 6</div>
+
+    <!-- Slide 1 (long message, scrollable) -->
+    <div class="slide zoom-reveal" style="display: flex;">
+        <div class="glass-card">
+            <img src="assets/images/1.jpeg" alt="1">
+            <div class="caption scrollable">
+Hi Muthmaniyee, nan ninde Thumma. Ninne aadhyam aayi kandappo sathyam paranja ekk ndha parayande nn ariyindarnnila. Ninne kanan venditta najn nee aa pillerde koode guide nn ndakkumbho okke thazhekk okke vannernne. Nee enne nokiya chelpo njan aake heartbeat koode ninnene. Pakshe apozhum nee enne kandu kilipoyitta nadannernne. Ende life le ende wifee nn parayan God thanna orale life il ingahane aanu first kandu mutta nn orikalum njan vicharichattila. Ekk ninne nallom ishtaade, nammal epozhum ee life il nammade sandhoshathilum veshmathilum okke koode indavanam nn ind ekk. Let be prepared for a future that truly belongs to us.
+            </div>
+            <button class="read-more-btn" onclick="toggleCaption(this)">Read More</button>
+        </div>
+    </div>
+
+    <!-- Slide 2 (short message) -->
+    <div class="slide zoom-reveal">
+        <div class="glass-card">
+            <img src="assets/images/2.jpeg" alt="2">
+            <div class="caption">
+Muthmainiyee, itha nammade life il nammal orumich adhyam aayi orumich nadanna day. A day as a free birds. Ekk athupole ninde koode ee life full nadakkanam. Neeyum ende koode indavile?
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 (long message, scrollable) -->
+    <div class="slide zoom-reveal">
+        <div class="glass-card">
+            <img src="assets/images/3.jpeg" alt="3">
+            <div class="caption scrollable">
+Nammade lifil nammal epozhum ithupole jolly aayi irikyanam tta, nee choychile ende ishtathil nee oru place aaya nee ndhavum nn. Ekk nee pona sthalangal okke oppam nadakkana ishtam; athellam ende fav aavum, ennitum njan aa sakura tree ayach. Coz ekk ninde koode oru beach or sakura tree okke pole ila place il ottak visalam aayi nammal randuper aayi orumich irikyan ishtam ilonda. I know ninakum athoke ishtaanenu.
+            </div>
+            <button class="read-more-btn" onclick="toggleCaption(this)">Read More</button>
+        </div>
+    </div>
+
+    <!-- Slide 4 (short message) -->
+    <div class="slide zoom-reveal">
+        <div class="glass-card">
+            <img src="assets/images/4.jpeg" alt="4">
+            <div class="caption">
+Nammade kalyanam nammade parants nde ishtathinu okke nadakkum venam, after kalyanam ninde Achande koode neeyum aayit ekk ithupole jolly aayi povum venam. Heheheh, appom nammade life okke ndhoram bootiful aavulede...
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5 (long message, scrollable) -->
+    <div class="slide zoom-reveal">
+        <div class="glass-card">
+            <img src="assets/images/5.jpeg" alt="5">
+            <div class="caption scrollable">
+Nammal orumich big alark aavum ennit nammal nalla nalla place ilk okke ithupole povum, gud gud fud kaikkum, nammade own cafe thodangum nammal and ee religion onnum nokand kalyanam kaich nammade parants nde pedi ellam maati avarde munnilum avar avare kaliyakiyavarde munnilum nammade abhimanathone thala uyarthi pidich parayum ath ende molla, ende mona avark kaliyanathinde time njan madham onnum nokilaathonda avar ithrakkum gud life ipozhum jeevikane. Edhoru madhathinde nde munnilum love thotu povila nn okke.
+            </div>
+            <button class="read-more-btn" onclick="toggleCaption(this)">Read More</button>
+        </div>
+    </div>
+
+    <!-- Slide 6 (short message) -->
+    <div class="slide zoom-reveal">
+        <div class="glass-card">
+            <img src="assets/images/6.jpeg" alt="6">
+            <div class="caption">
+After our marriage, ith ekk recreate cheyyanam, Hehehe
+            </div>
+        </div>
+    </div>
+
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+</div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.querySelector('.yes-btn');
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const allAudio = document.querySelectorAll('audio');
+const counter = document.getElementById('counter');
+let rainInterval;
+
+function stopAllMusic() {
+    allAudio.forEach(audio => { 
+        audio.pause(); 
+        audio.currentTime = 0; 
+    });
+}
+
+function updateCounter() {
+    counter.innerText = `MOMENT ${currentSlide + 1} / ${slides.length}`;
+}
+
+updateCounter();
+
+// NO BUTTON ESCAPE
+const escape = (e) => {
+    e.preventDefault();
+    stopAllMusic();
+    document.getElementById('music-no').play().catch(()=>{});
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    yesBtn.style.transform = `scale(${1 + Math.random() * 0.2})`;
+};
+noBtn.addEventListener('touchstart', escape);
+noBtn.addEventListener('mouseover', escape);
+noBtn.addEventListener('click', escape);
+
+// CELEBRATE YES
+function celebrate() {
+    stopAllMusic();
+    document.getElementById('music-yes').play().catch(()=>{});
+    const propPage = document.getElementById('proposal-page');
+    propPage.style.transform = 'translateY(-100vh)';
+    propPage.style.opacity = '0';
+    rainInterval = setInterval(createRain, 150);
+    setTimeout(() => {
+        clearInterval(rainInterval);
+        propPage.style.display = 'none';
+        document.getElementById('album-page').style.display = 'block';
+        playPicMusic(0);
+    }, 1000);
+}
+
+// RAIN EFFECT
+function createRain() {
+    const items = ['🌹', '❤️', '💖', '✨'];
+    const div = document.createElement('div');
+    div.className = 'falling';
+    div.innerHTML = items[Math.floor(Math.random()*items.length)];
+    div.style.left = Math.random() * 100 + 'vw';
+    div.style.fontSize = (Math.random() * 20 + 15) + 'px';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 4500);
+}
+
+// NAVIGATION
+function changeSlide(n) {
+    slides[currentSlide].style.display = 'none';
+    currentSlide = (currentSlide + n + slides.length) % slides.length;
+    slides[currentSlide].style.display = 'flex';
+    updateCounter();
+    playPicMusic(currentSlide);
+}
+
+function playPicMusic(index) {
+    stopAllMusic();
+    const music = document.getElementById(`music-pic${index + 1}`);
+    if (music) music.play().catch(() => {
+        console.log("User interaction required for audio.");
+    });
+}
+
+// READ MORE / LESS
+function toggleCaption(btn) {
+    const caption = btn.previousElementSibling;
+    caption.classList.toggle('expanded');
+    btn.innerText = caption.classList.contains('expanded') ? 'Read Less' : 'Read More';
+}
+</script>
+</body>
+</html>
